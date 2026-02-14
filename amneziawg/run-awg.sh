@@ -32,7 +32,8 @@ ip link set $WG_IF up
 ip route add $ENDPOINT $DEFAULT_VIA
 ip route replace default dev $WG_IF
 
-while : ;
-    echo  [$(date)] : $(curl --max-time 5 http://ifconfig.me)
+set +x
+while : ; do
+    echo  [$(date)] : $(curl -s --max-time 5 http://ifconfig.me)
     sleep 15
 done

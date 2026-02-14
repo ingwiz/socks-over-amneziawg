@@ -29,7 +29,7 @@ FROM ubuntu:24.04
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-    ca-certificates curl \
+    ca-certificates curl iproute2 iputils-ping dnsutils \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -37,5 +37,7 @@ COPY --from=builder \
     /usr/local/sbin/amneziawg-go \
     /usr/local/sbin/awg \
     /usr/local/sbin/
+
+COPY ./run-awg.sh /
 
 CMD ["/usr/bin/bash", "/run-awg.sh"]
