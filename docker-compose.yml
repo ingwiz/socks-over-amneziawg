@@ -1,0 +1,28 @@
+networks:
+  awg-net:
+    driver: bridge
+
+services:
+  amneziawg:
+    dns:
+    - 8.8.8.8
+    build:
+      context: ./amneziawg
+    image: ingwiz/amneziawg
+    container_name: amneziawg
+    restart: on-failure:5
+    # env_file: .env
+    cap_add:
+    - NET_ADMIN
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=1
+    volumes:
+      - ${CONF}:/etc/awg.conf
+    devices:
+        - /dev/net/tun
+    networks:
+      - awg-net
+    cpus: 1.0
+    ports:
+      - "127.0.0.1:2080:1080/tcp"  # dante
+      - "127.0.0.1:2080:1080/udp"  # dante
