@@ -11,18 +11,43 @@ services:
     image: ingwiz/amneziawg
     container_name: amneziawg
     restart: on-failure:5
-    # env_file: .env
+    env_file: .env
     cap_add:
     - NET_ADMIN
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=1
     volumes:
-      - ${CONF}:/etc/awg.conf
+      - ${CONF}:/etc/awg.conf:ro
     devices:
         - /dev/net/tun
     networks:
       - awg-net
     cpus: 1.0
     ports:
-      - "127.0.0.1:2080:1080/tcp"  # dante
-      - "127.0.0.1:2080:1080/udp"  # dante
+      - "127.0.0.1:${SOCKS_PORT}:1080/tcp"  # dante
+      - "127.0.0.1:${SOCKS_PORT}:1080/udp"  # dante
+    healthcheck:
+      test: ["CMD", "ip", "route", "show", "dev", "wg0"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+
+  socks5:
+    build:
+      context: ./dante
+    image: ingwiz/dante
+    # container_name: dante
+    restart: on-failure:5
+    depends_on:
+      amneziawg:
+        condition: service_healthy
+    network_mode: service:amneziawg
+    cpus: 1.0
+    cap_add:
+      # UDP over SOCKS may not work or break without this option
+      - NET_ADMIN
+    volumes:
+      - ./dante/danted.conf:/etc/danted.conf:ro
+    security_opt:
+      - no-new-privileges:true
