@@ -75,7 +75,7 @@ A standard Linux host with Docker should work as well (requires `/dev/net/tun` s
 ## 🧪 Test
 
 ```bash
-curl --socks5-hostname 127.0.0.1:2081 https://ifconfig.me
+curl -x socks5://127.0.0.1:2081 https://ifconfig.me
 ```
 
 You should see your VPN IP address.
