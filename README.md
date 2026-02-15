@@ -93,4 +93,4 @@ You should see your VPN IP address.
 
 ## 📄 License
 
-MIT (or your preferred license)
+MIT
