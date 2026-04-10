@@ -8,7 +8,11 @@ RUN apt-get update && \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+COPY danted.conf /etc/danted.conf
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 EXPOSE 1080/tcp
 EXPOSE 1080/udp
 
-ENTRYPOINT ["/usr/sbin/danted", "-f", "/etc/danted.conf"]
+ENTRYPOINT ["/entrypoint.sh"]
