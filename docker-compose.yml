@@ -38,6 +38,7 @@ services:
       context: ./dante
     image: ingwiz/dante
     # container_name: dante
+    env_file: .env
     restart: on-failure:5
     depends_on:
       amneziawg:
@@ -47,7 +48,7 @@ services:
     cap_add:
       # UDP over SOCKS may not work or break without this option
       - NET_ADMIN
-    volumes:
-      - ./dante/danted.conf:/etc/danted.conf:ro
+    # volumes:
+    #   - ./dante/danted.conf:/etc/danted.conf:ro
     security_opt:
       - no-new-privileges:true
